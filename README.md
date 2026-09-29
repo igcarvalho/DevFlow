@@ -37,9 +37,24 @@ Centralizar o conhecimento técnico de projetos em um único lugar, eliminando a
 ```
 DevFlow/
 ├── backend/            # API FastAPI
+│   ├── app/            # Código da aplicação
+│   ├── tests/          # Testes
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── .env.example
 ├── frontend/           # Aplicação Next.js
+│   ├── src/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── .env.example
 ├── docs/               # Documentação do produto e arquitetura
+│   ├── product.md
+│   ├── architecture.md
+│   ├── data-model.md
+│   └── roadmap.md
 ├── docker-compose.yml  # Orquestração dos serviços
+├── Makefile            # Comandos úteis
+├── .env.example
 └── README.md
 ```
 
@@ -50,12 +65,30 @@ DevFlow/
 git clone https://github.com/igcarvalho/DevFlow.git
 cd DevFlow
 
+# Copie as variáveis de ambiente
+cp .env.example .env
+
 # Inicie todos os serviços
-docker-compose up -d
+make up
+# ou: docker-compose up -d
 
 # Acesse a aplicação
 # Frontend: http://localhost:3000
-# API:      http://localhost:8000/docs
+# API docs: http://localhost:8000/docs
+# MinIO console: http://localhost:9001
+```
+
+## 🛠️ Comandos úteis
+
+```bash
+make up              # Inicia todos os serviços
+make down            # Para todos os serviços
+make build           # Rebuilda as imagens
+make logs            # Mostra logs em tempo real
+make shell-backend   # Acessa o container do backend
+make shell-frontend  # Acessa o container do frontend
+make migrate         # Executa migrations do banco
+make test            # Executa os testes do backend
 ```
 
 ## 📚 Documentação
