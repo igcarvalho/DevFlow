@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from app.core.security import decode_token
 from app.db.session import get_db
+from app.models.project import Project, ProjectMember, ProjectRole
 from app.models.user import User
 from app.schemas.token import TokenData
 
@@ -39,3 +40,46 @@ async def get_current_user(
     if not user.is_active:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Inactive user")
     return user
+
+
+async def get_project_member(
+    project_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+    current_user: Annotated[User, Depends(get_current_user)],
+) -> ProjectMember:
+    project = (
+        db.query(Project)
+        .filter(Project.id == project_id, Project.is_active == True)  # noqa: E712
+        .first()
+    )
+    if project is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Project not found")
+
+    member = (
+        db.query(ProjectMember)
+        .filter(
+            ProjectMember.project_id == project_id,
+            ProjectMember.user_id == current_user.id,
+        )
+        .first()
+    )
+    if member is None:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Not a member of this project",
+        )
+    return member
+
+
+def require_project_roles(*roles: ProjectRole):
+    async def checker(
+        member: Annotated[ProjectMember, Depends(get_project_member)],
+    ) -> ProjectMember:
+        if member.role not in roles:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Insufficient project permissions",
+            )
+        return member
+
+    return checker
