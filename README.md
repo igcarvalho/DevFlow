@@ -73,9 +73,9 @@ make up
 # ou: docker-compose up -d
 
 # Acesse a aplicação
-# Frontend: http://localhost:3000
+# Frontend: http://localhost:3001
 # API docs: http://localhost:8000/docs
-# MinIO console: http://localhost:9001
+# PostgreSQL (externo): localhost:5433
 ```
 
 ## 🛠️ Comandos úteis

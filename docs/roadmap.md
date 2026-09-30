@@ -9,19 +9,19 @@
 - [x] Documento de arquitetura
 - [x] Modelo de dados
 - [x] Roadmap inicial
-- [ ] Docker Compose com todos os serviços
+- [x] Docker Compose com todos os serviços
 
 ## Fase 2 — Setup do backend
 
 **Objetivo:** ter uma API FastAPI funcional, conectada ao banco e com autenticação.
 
-- [ ] Estrutura de pastas do backend
-- [ ] Configuração de variáveis de ambiente
-- [ ] Conexão com PostgreSQL via SQLAlchemy
-- [ ] Configuração do Alembic para migrations
-- [ ] Modelo e CRUD de usuários
-- [ ] Registro e login com JWT
-- [ ] Middleware de autenticação
+- [x] Estrutura de pastas do backend
+- [x] Configuração de variáveis de ambiente
+- [x] Conexão com PostgreSQL via SQLAlchemy
+- [x] Configuração do Alembic para migrations
+- [x] Modelo e CRUD de usuários
+- [x] Registro e login com JWT
+- [x] Middleware de autenticação
 - [ ] Testes unitários iniciais
 
 ## Fase 3 — Projetos e permissões
