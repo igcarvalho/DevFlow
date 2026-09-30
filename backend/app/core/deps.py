@@ -1,8 +1,8 @@
 import uuid
 from typing import Annotated
 
-import jwt
 from fastapi import Depends, HTTPException, status
+from jose import JWTError
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.orm import Session
 
@@ -30,7 +30,7 @@ async def get_current_user(
         if user_id is None or email is None:
             raise credentials_exception
         token_data = TokenData(user_id=uuid.UUID(user_id), email=email)
-    except (jwt.PyJWTError, ValueError):
+    except (JWTError, ValueError):
         raise credentials_exception
 
     user = db.query(User).filter(User.id == token_data.user_id).first()
