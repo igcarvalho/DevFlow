@@ -173,6 +173,22 @@ export interface Issue {
   assignee_name: string | null;
 }
 
+export type AiJobType = 'summarize' | 'ask' | 'suggest_tasks';
+export type AiJobStatus = 'pending' | 'processing' | 'completed' | 'failed';
+
+export interface AiJob {
+  id: string;
+  project_id: string;
+  type: AiJobType;
+  status: AiJobStatus;
+  input_data: Record<string, unknown>;
+  result: Record<string, unknown> | null;
+  error_message: string | null;
+  created_by: string;
+  created_at: string;
+  completed_at: string | null;
+}
+
 export interface Chat {
   id: string;
   project_id: string;
@@ -278,6 +294,22 @@ export const chatApi = {
       content,
       reply_to_id: replyToId ?? null,
     }),
+};
+
+export const aiApi = {
+  summarize: (projectId: string, documentId: string) =>
+    api.post<AiJob>(`/api/v1/projects/${projectId}/ai/summarize`, {
+      document_id: documentId,
+    }),
+  ask: (projectId: string, documentId: string, question: string) =>
+    api.post<AiJob>(`/api/v1/projects/${projectId}/ai/ask`, {
+      document_id: documentId,
+      question,
+    }),
+  suggestTasks: (projectId: string) =>
+    api.post<AiJob>(`/api/v1/projects/${projectId}/ai/suggest-tasks`, {}),
+  getJob: (projectId: string, jobId: string) =>
+    api.get<AiJob>(`/api/v1/projects/${projectId}/ai/jobs/${jobId}`),
 };
 
 export const issuesApi = {

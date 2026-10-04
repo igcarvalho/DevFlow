@@ -12,6 +12,7 @@ import {
 import { useAuth } from '@/lib/auth';
 import ChatPanel from '@/components/ChatPanel';
 import IssuesBoard from '@/components/IssuesBoard';
+import AiPanel from '@/components/AiPanel';
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: 'Aguardando', className: 'bg-yellow-100 text-yellow-800' },
@@ -37,9 +38,9 @@ export default function ProjectPage() {
 
   const [memberEmail, setMemberEmail] = useState('');
   const [memberMessage, setMemberMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'documents' | 'chat' | 'issues'>(
-    'documents',
-  );
+  const [activeTab, setActiveTab] = useState<
+    'documents' | 'chat' | 'issues' | 'ai'
+  >('documents');
 
   useEffect(() => {
     if (!authLoading && !authenticated) {
@@ -172,12 +173,24 @@ export default function ProjectPage() {
               >
                 Tarefas
               </button>
+              <button
+                onClick={() => setActiveTab('ai')}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                  activeTab === 'ai'
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                IA
+              </button>
             </div>
 
             {activeTab === 'chat' ? (
               <ChatPanel projectId={projectId} />
             ) : activeTab === 'issues' ? (
               <IssuesBoard projectId={projectId} />
+            ) : activeTab === 'ai' ? (
+              <AiPanel projectId={projectId} />
             ) : (
             <>
             <div className="mb-4 flex items-center justify-between">

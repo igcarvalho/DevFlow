@@ -6,7 +6,7 @@ celery_app = Celery(
     "devflow",
     broker=settings.CELERY_BROKER_URL,
     backend=settings.CELERY_RESULT_BACKEND,
-    include=["app.tasks.documents"],
+    include=["app.tasks.documents", "app.tasks.ai"],
 )
 
 celery_app.conf.update(
