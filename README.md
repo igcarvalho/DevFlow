@@ -42,9 +42,10 @@ Centralizar o conhecimento técnico de projetos em um único lugar, eliminando a
 - ✅ Tarefas com kanban
 - ✅ Anotações em documentos por página (nota, destaque, comentário)
 - ✅ Busca full-text em documentos e mensagens
-- ✅ Assistente de IA (resumo, perguntas, sugestão de tarefas)
-- ✅ Frontend Next.js completo (login, dashboard, documentos, chat, tarefas, anotações, busca e IA)
-- 🔜 Deploy e polimento final
+- ✅ Assistente de IA gratuito (Groq) — resumo, perguntas e sugestão de tarefas
+- ✅ Frontend Next.js com design moderno (landing, dashboard e 5 abas por projeto)
+- ✅ Deploy com Docker Compose para produção
+- 🔜 Melhorias contínuas
 
 ## 📁 Estrutura do repositório
 

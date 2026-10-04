@@ -6,8 +6,23 @@ import { AuthProvider } from '@/lib/auth';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'DevFlow',
-  description: 'Plataforma colaborativa para projetos técnicos',
+  title: {
+    default: 'DevFlow — Colaboração técnica por projeto',
+    template: '%s · DevFlow',
+  },
+  description:
+    'Plataforma colaborativa para documentar, discutir e gerenciar projetos técnicos com documentos, chat, tarefas e IA.',
+  keywords: [
+    'colaboração',
+    'documentação',
+    'projetos técnicos',
+    'gestão de tarefas',
+    'IA',
+  ],
+};
+
+export const viewport = {
+  themeColor: '#4f46e5',
 };
 
 export default function RootLayout({
