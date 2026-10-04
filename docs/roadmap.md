@@ -38,14 +38,24 @@
 
 **Objetivo:** permitir upload, processamento e visualização de documentos.
 
-- [ ] Integração com storage S3 (Zenko CloudServer)
-- [ ] Upload de arquivos PDF e PPTX
-- [ ] Fila Celery para processamento
-- [ ] Extração de texto de PDF
-- [ ] Extração/convertimento de PPTX
-- [ ] Versionamento de documentos
+- [x] Integração com storage S3 (moto server em desenvolvimento)
+- [x] Upload de arquivos PDF e PPTX
+- [x] Fila Celery para processamento
+- [x] Extração de texto de PDF
+- [x] Extração/convertimento de PPTX
+- [x] Versionamento de documentos
 - [ ] Visualização de documentos no frontend
 - [ ] Status e progresso de processamento
+
+## Fase 4.5 — Frontend base (antecipado)
+
+**Objetivo:** ter interface utilizável antes de avançar no backend.
+
+- [ ] Cliente de API e contexto de autenticação
+- [ ] Telas de login e registro
+- [ ] Dashboard de projetos
+- [ ] Tela de projeto com documentos
+- [ ] Upload com progresso
 
 ## Fase 5 — Anotações e comentários
 
