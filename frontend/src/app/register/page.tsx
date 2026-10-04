@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { register } from '@/lib/api';
+import Logo from '@/components/Logo';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -28,83 +29,156 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="mb-8 text-center">
-          <Link href="/" className="text-3xl font-bold text-primary-700">
-            DevFlow
-          </Link>
-          <p className="mt-2 text-gray-600">Crie sua conta</p>
+    <main className="flex min-h-screen bg-mesh">
+      {/* Painel lateral decorativo */}
+      <div className="relative hidden w-1/2 overflow-hidden bg-gradient-to-br from-accent-600 to-primary-700 lg:flex lg:flex-col lg:justify-between lg:p-12">
+        <div className="pointer-events-none absolute -right-16 top-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-20 -left-10 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+
+        <Link href="/" className="relative inline-flex">
+          <span className="inline-flex items-center gap-2">
+            <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-white/20 backdrop-blur">
+              <svg viewBox="0 0 24 24" fill="none" className="h-4 w-4 text-white">
+                <path
+                  d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M8 13.5l2.2 2.2L15.5 11"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
+            <span className="text-lg font-bold text-white">DevFlow</span>
+          </span>
+        </Link>
+
+        <div className="relative">
+          <h2 className="text-3xl font-bold leading-tight text-white">
+            Comece em menos de um minuto.
+          </h2>
+          <p className="mt-4 max-w-md text-primary-50">
+            Crie sua conta gratuita e monte seu primeiro projeto com documentos,
+            chat, tarefas e IA.
+          </p>
+
+          <div className="mt-8 grid grid-cols-2 gap-4">
+            {[
+              { value: '∞', label: 'Projetos' },
+              { value: '5', label: 'Módulos integrados' },
+              { value: '100%', label: 'Gratuito' },
+              { value: 'IA', label: 'Incluída' },
+            ].map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur"
+              >
+                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-xs text-primary-100">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-gray-200 bg-white p-8 shadow-sm"
-        >
-          {error && (
-            <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
-              {error}
-            </div>
-          )}
+        <p className="relative text-xs text-primary-100">
+          © {new Date().getFullYear()} DevFlow. Projeto pessoal.
+        </p>
+      </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Nome completo
-            </label>
-            <input
-              type="text"
-              required
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              placeholder="Seu nome"
-            />
+      {/* Formulário */}
+      <div className="flex w-full items-center justify-center px-6 py-12 lg:w-1/2">
+        <div className="w-full max-w-md animate-slide-up">
+          <div className="mb-8 lg:hidden">
+            <Logo />
           </div>
 
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Email
-            </label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              placeholder="voce@email.com"
-            />
-          </div>
-
-          <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
-              Senha
-            </label>
-            <input
-              type="password"
-              required
-              minLength={6}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-              placeholder="Mínimo 6 caracteres"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full rounded-lg bg-primary-600 px-4 py-2.5 font-medium text-white transition hover:bg-primary-700 disabled:opacity-60"
-          >
-            {loading ? 'Criando...' : 'Criar conta'}
-          </button>
-
-          <p className="text-center text-sm text-gray-600">
-            Já tem conta?{' '}
-            <Link href="/login" className="font-medium text-primary-600 hover:underline">
-              Entrar
-            </Link>
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900">
+            Criar sua conta
+          </h1>
+          <p className="mt-1.5 text-sm text-slate-600">
+            Leva menos de um minuto
           </p>
-        </form>
+
+          <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+            {error && (
+              <div className="flex items-start gap-2 rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                <svg viewBox="0 0 20 20" fill="currentColor" className="mt-0.5 h-4 w-4 shrink-0">
+                  <path
+                    fillRule="evenodd"
+                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm0-13a.75.75 0 0 1 .75.75v4.5a.75.75 0 0 1-1.5 0v-4.5A.75.75 0 0 1 10 5Zm0 9a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                {error}
+              </div>
+            )}
+
+            <div>
+              <label className="label" htmlFor="fullName">
+                Nome completo
+              </label>
+              <input
+                id="fullName"
+                type="text"
+                required
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                className="input"
+                placeholder="Seu nome"
+              />
+            </div>
+
+            <div>
+              <label className="label" htmlFor="email">
+                Email
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input"
+                placeholder="voce@email.com"
+              />
+            </div>
+
+            <div>
+              <label className="label" htmlFor="password">
+                Senha
+              </label>
+              <input
+                id="password"
+                type="password"
+                required
+                minLength={6}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input"
+                placeholder="Mínimo 6 caracteres"
+              />
+            </div>
+
+            <button type="submit" disabled={loading} className="btn-primary w-full py-3">
+              {loading ? 'Criando conta...' : 'Criar conta'}
+            </button>
+
+            <p className="text-center text-sm text-slate-600">
+              Já tem conta?{' '}
+              <Link
+                href="/login"
+                className="font-semibold text-primary-600 hover:text-primary-700 hover:underline"
+              >
+                Entrar
+              </Link>
+            </p>
+          </form>
+        </div>
       </div>
     </main>
   );

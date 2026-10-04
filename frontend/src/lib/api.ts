@@ -25,6 +25,30 @@ export function isAuthenticated(): boolean {
   return !!getToken();
 }
 
+export interface TokenPayload {
+  sub: string;
+  email: string;
+  exp: number;
+}
+
+export function getTokenPayload(): TokenPayload | null {
+  const token = getToken();
+  if (!token) return null;
+  try {
+    const base64 = token.split('.')[1];
+    const normalized = base64.replace(/-/g, '+').replace(/_/g, '/');
+    const decoded = decodeURIComponent(
+      atob(normalized)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(''),
+    );
+    return JSON.parse(decoded) as TokenPayload;
+  } catch {
+    return null;
+  }
+}
+
 export function documentFileUrl(
   projectId: string,
   documentId: string,
