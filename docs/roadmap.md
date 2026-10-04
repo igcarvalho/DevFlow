@@ -51,11 +51,11 @@
 
 **Objetivo:** ter interface utilizável antes de avançar no backend.
 
-- [ ] Cliente de API e contexto de autenticação
-- [ ] Telas de login e registro
-- [ ] Dashboard de projetos
-- [ ] Tela de projeto com documentos
-- [ ] Upload com progresso
+- [x] Cliente de API e contexto de autenticação
+- [x] Telas de login e registro
+- [x] Dashboard de projetos
+- [x] Tela de projeto com documentos
+- [x] Upload de documentos
 
 ## Fase 5 — Anotações e comentários
 

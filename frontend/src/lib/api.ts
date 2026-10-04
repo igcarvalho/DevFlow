@@ -146,6 +146,24 @@ export interface DocumentWithVersions extends Document {
   versions: DocumentVersion[];
 }
 
+export interface Chat {
+  id: string;
+  project_id: string;
+  created_at: string;
+}
+
+export interface Message {
+  id: string;
+  chat_id: string;
+  sender_id: string;
+  content: string;
+  reply_to_id: string | null;
+  created_at: string;
+  updated_at: string;
+  sender_name: string | null;
+  sender_email: string | null;
+}
+
 // ---- Endpoints ----
 
 export async function login(email: string, password: string): Promise<void> {
@@ -223,4 +241,14 @@ export const documentsApi = {
   },
   remove: (projectId: string, documentId: string) =>
     api.delete<void>(`/api/v1/projects/${projectId}/documents/${documentId}`),
+};
+
+export const chatApi = {
+  listMessages: (projectId: string) =>
+    api.get<Message[]>(`/api/v1/projects/${projectId}/chat/messages`),
+  sendMessage: (projectId: string, content: string, replyToId?: string) =>
+    api.post<Message>(`/api/v1/projects/${projectId}/chat/messages`, {
+      content,
+      reply_to_id: replyToId ?? null,
+    }),
 };

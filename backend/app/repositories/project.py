@@ -2,6 +2,7 @@ import uuid
 
 from sqlalchemy.orm import Session
 
+from app.models.chat import Chat
 from app.models.project import Project, ProjectMember, ProjectRole
 from app.models.user import User
 from app.schemas.project import ProjectCreate, ProjectUpdate
@@ -22,6 +23,10 @@ def create_project(db: Session, project_in: ProjectCreate, owner: User) -> Proje
         role=ProjectRole.owner,
     )
     db.add(member)
+
+    chat = Chat(project_id=project.id)
+    db.add(chat)
+
     db.commit()
     db.refresh(project)
     return project

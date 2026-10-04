@@ -10,6 +10,7 @@ import {
   projectsApi,
 } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
+import ChatPanel from '@/components/ChatPanel';
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: 'Aguardando', className: 'bg-yellow-100 text-yellow-800' },
@@ -35,6 +36,7 @@ export default function ProjectPage() {
 
   const [memberEmail, setMemberEmail] = useState('');
   const [memberMessage, setMemberMessage] = useState('');
+  const [activeTab, setActiveTab] = useState<'documents' | 'chat'>('documents');
 
   useEffect(() => {
     if (!authLoading && !authenticated) {
@@ -136,6 +138,33 @@ export default function ProjectPage() {
 
         <div className="grid gap-6 lg:grid-cols-3">
           <section className="lg:col-span-2">
+            <div className="mb-4 flex gap-1 rounded-lg border border-gray-200 bg-white p-1">
+              <button
+                onClick={() => setActiveTab('documents')}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                  activeTab === 'documents'
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Documentos
+              </button>
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                  activeTab === 'chat'
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Chat
+              </button>
+            </div>
+
+            {activeTab === 'chat' ? (
+              <ChatPanel projectId={projectId} />
+            ) : (
+            <>
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">Documentos</h2>
               <button
@@ -217,6 +246,8 @@ export default function ProjectPage() {
                   );
                 })}
               </ul>
+            )}
+            </>
             )}
           </section>
 
