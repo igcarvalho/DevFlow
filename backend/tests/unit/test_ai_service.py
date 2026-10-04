@@ -10,7 +10,7 @@ def test_default_groq_base_url_and_model():
         "app.services.ai.settings.AI_BASE_URL", ""
     ), patch("app.services.ai.settings.AI_MODEL", ""):
         assert ai._resolve_base_url() == "https://api.groq.com/openai/v1"
-        assert ai._resolve_model() == "llama-3.3-70b-versatile"
+        assert ai._resolve_model() == "openai/gpt-oss-120b"
 
 
 def test_openai_defaults():

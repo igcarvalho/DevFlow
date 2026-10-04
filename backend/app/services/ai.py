@@ -14,7 +14,7 @@ PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
     },
     "groq": {
         "base_url": "https://api.groq.com/openai/v1",
-        "model": "llama-3.3-70b-versatile",
+        "model": "openai/gpt-oss-120b",
     },
     "ollama": {
         "base_url": "http://ollama:11434/v1",
@@ -109,6 +109,7 @@ def suggest_tasks(context: str) -> list[dict]:
     client = _client()
     prompt = (
         "Analise a conversa abaixo e sugira tarefas técnicas acionáveis.\n"
+        "Escreva os títulos e descrições em português do Brasil.\n"
         "Responda APENAS com um array JSON válido, sem texto adicional.\n"
         'Formato: [{"title": "...", "description": "...", "priority": "low|medium|high|urgent"}]\n'
         "Sugira no máximo 5 tarefas.\n\n"
