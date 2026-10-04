@@ -296,6 +296,40 @@ export const chatApi = {
     }),
 };
 
+export interface DocumentSearchResult {
+  id: string;
+  title: string;
+  description: string | null;
+  status: string;
+  created_at: string;
+  snippet: string | null;
+  version_id: string | null;
+}
+
+export interface MessageSearchResult {
+  id: string;
+  chat_id: string;
+  content: string;
+  sender_id: string;
+  sender_name: string | null;
+  created_at: string;
+  snippet: string | null;
+}
+
+export interface SearchResponse {
+  query: string;
+  documents: DocumentSearchResult[];
+  messages: MessageSearchResult[];
+  total: number;
+}
+
+export const searchApi = {
+  query: (projectId: string, q: string, type = 'all') =>
+    api.get<SearchResponse>(
+      `/api/v1/projects/${projectId}/search?q=${encodeURIComponent(q)}&type=${type}`,
+    ),
+};
+
 export const aiApi = {
   summarize: (projectId: string, documentId: string) =>
     api.post<AiJob>(`/api/v1/projects/${projectId}/ai/summarize`, {
