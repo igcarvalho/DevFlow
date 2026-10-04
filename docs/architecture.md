@@ -109,9 +109,11 @@ O DevFlow segue uma arquitetura modular em camadas, containerizada com Docker Co
               └── preview/
   ```
 
-### IA (OpenAI)
+### IA (provedor configurável)
 
-- Serviço dedicado para chamadas à API da OpenAI
+- Serviço dedicado para chamadas a provedores compatíveis com a API da OpenAI
+- Provedor padrão: **Groq** (gratuito); alternativas: OpenAI, Ollama (local), OpenRouter e Gemini
+- Provedor definido por variável de ambiente (`AI_PROVIDER`), sem alteração de código
 - Sempre filtra o contexto pela permissão do usuário no projeto
 - Funcionalidades:
   - Resumo de documento
@@ -128,7 +130,7 @@ O DevFlow segue uma arquitetura modular em camadas, containerizada com Docker Co
 | Backend | Redis | redis-py | Fila e cache |
 | Celery Worker | Redis | redis-py | Consumo de tarefas |
 | Celery Worker | MinIO | boto3 | Leitura/escrita de arquivos |
-| Celery Worker | OpenAI | HTTP/REST | Jobs de IA |
+| Celery Worker | Provedor de IA | HTTP/REST | Jobs de IA |
 
 ## Segurança
 

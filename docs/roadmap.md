@@ -97,7 +97,7 @@
 
 **Objetivo:** extrair valor dos documentos e conversas.
 
-- [x] Serviço de integração com OpenAI
+- [x] Serviço de integração com provedor de IA (Groq por padrão, configurável)
 - [x] Resumo de documento
 - [x] Perguntas e respostas sobre documento
 - [x] Sugestão de tarefas a partir de chat
