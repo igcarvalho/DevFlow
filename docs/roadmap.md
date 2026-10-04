@@ -61,10 +61,10 @@
 
 **Objetivo:** adicionar contexto aos documentos.
 
-- [ ] Criar anotações em páginas
-- [ ] Tipos: nota, destaque, comentário
-- [ ] Posicionamento na página (opcional)
-- [ ] Listagem de anotações por documento/página
+- [x] Criar anotações em páginas
+- [x] Tipos: nota, destaque, comentário
+- [x] Posicionamento na página (opcional)
+- [x] Listagem de anotações por documento/página
 
 ## Fase 6 — Chat por projeto
 
@@ -89,9 +89,9 @@
 
 **Objetivo:** encontrar informações rapidamente.
 
-- [ ] Busca full-text em documentos (texto extraído)
-- [ ] Busca em mensagens
-- [ ] Filtros por projeto e tipo
+- [x] Busca full-text em documentos (texto extraído)
+- [x] Busca em mensagens
+- [x] Filtros por projeto e tipo
 
 ## Fase 9 — Inteligência artificial
 

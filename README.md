@@ -40,9 +40,11 @@ Centralizar o conhecimento técnico de projetos em um único lugar, eliminando a
 - ✅ Processamento assíncrono com Celery
 - ✅ Chat por projeto com respostas
 - ✅ Tarefas com kanban
+- ✅ Anotações em documentos por página (nota, destaque, comentário)
+- ✅ Busca full-text em documentos e mensagens
 - ✅ Assistente de IA (resumo, perguntas, sugestão de tarefas)
-- ✅ Frontend Next.js com login, dashboard, documentos, chat, tarefas e IA
-- 🔜 Anotações em documentos, busca full-text, deploy
+- ✅ Frontend Next.js completo (login, dashboard, documentos, chat, tarefas, anotações, busca e IA)
+- 🔜 Deploy e polimento final
 
 ## 📁 Estrutura do repositório
 
