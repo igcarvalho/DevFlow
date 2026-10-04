@@ -70,20 +70,20 @@
 
 **Objetivo:** comunicação organizada dentro de cada projeto.
 
-- [ ] Criação automática do chat ao criar projeto
-- [ ] Envio e listagem de mensagens
-- [ ] Respostas a mensagens
+- [x] Criação automática do chat ao criar projeto
+- [x] Envio e listagem de mensagens
+- [x] Respostas a mensagens
 - [ ] Menções a membros
 
 ## Fase 7 — Issues e tarefas
 
 **Objetivo:** transformar discussões em ações.
 
-- [ ] CRUD de issues
-- [ ] Status e prioridade
-- [ ] Responsável e prazo
+- [x] CRUD de issues
+- [x] Status e prioridade
+- [x] Responsável e prazo
 - [ ] Vinculação com documentos e mensagens
-- [ ] Listagem por projeto (Kanban simples)
+- [x] Listagem por projeto (Kanban simples)
 
 ## Fase 8 — Busca
 
@@ -97,11 +97,11 @@
 
 **Objetivo:** extrair valor dos documentos e conversas.
 
-- [ ] Serviço de integração com OpenAI
-- [ ] Resumo de documento
-- [ ] Perguntas e respostas sobre documento
-- [ ] Sugestão de tarefas a partir de chat
-- [ ] Fila de jobs de IA
+- [x] Serviço de integração com OpenAI
+- [x] Resumo de documento
+- [x] Perguntas e respostas sobre documento
+- [x] Sugestão de tarefas a partir de chat
+- [x] Fila de jobs de IA
 - [ ] Histórico de jobs de IA por projeto
 
 ## Fase 10 — Frontend Next.js

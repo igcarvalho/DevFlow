@@ -28,9 +28,21 @@ Centralizar o conhecimento técnico de projetos em um único lugar, eliminando a
 | Banco de dados | PostgreSQL |
 | Fila e cache | Redis |
 | Processamento async | Celery |
-| Armazenamento de arquivos | MinIO (S3-compatible) |
+| Armazenamento de arquivos | S3-compatible (moto em desenvolvimento) |
 | Inteligência artificial | OpenAI |
 | Containerização | Docker Compose |
+
+## 📊 Status do projeto
+
+- ✅ Autenticação (registro, login, JWT)
+- ✅ Projetos com membros e papéis (owner/admin/member)
+- ✅ Documentos com upload, versionamento e extração de texto (PDF/PPTX)
+- ✅ Processamento assíncrono com Celery
+- ✅ Chat por projeto com respostas
+- ✅ Tarefas com kanban
+- ✅ Assistente de IA (resumo, perguntas, sugestão de tarefas)
+- ✅ Frontend Next.js com login, dashboard, documentos, chat, tarefas e IA
+- 🔜 Anotações em documentos, busca full-text, deploy
 
 ## 📁 Estrutura do repositório
 
