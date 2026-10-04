@@ -23,9 +23,9 @@ const TYPE_LABELS: Record<AnnotationType, string> = {
 };
 
 const TYPE_STYLES: Record<AnnotationType, string> = {
-  note: 'bg-yellow-100 text-yellow-800',
-  highlight: 'bg-blue-100 text-blue-800',
-  comment: 'bg-purple-100 text-purple-800',
+  note: 'bg-amber-50 text-amber-700 border border-amber-200',
+  highlight: 'bg-blue-50 text-blue-700 border border-blue-200',
+  comment: 'bg-violet-50 text-violet-700 border border-violet-200',
 };
 
 interface Props {
@@ -91,24 +91,24 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
   const pageAnnotations = annotations.filter((a) => a.page_number === page);
 
   return (
-    <div className="mt-3 grid gap-4 rounded-lg border border-gray-200 bg-gray-50 p-4 lg:grid-cols-3">
+    <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-4 lg:grid-cols-3">
       <div className="lg:col-span-2">
         <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPage((p) => Math.max(1, p - 1))}
               disabled={page <= 1}
-              className="rounded border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 disabled:opacity-40"
+              className="rounded border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700 disabled:opacity-40"
             >
               ←
             </button>
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-slate-600">
               Página {page} de {numPages || '?'}
             </span>
             <button
               onClick={() => setPage((p) => Math.min(numPages || 1, p + 1))}
               disabled={page >= numPages}
-              className="rounded border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 disabled:opacity-40"
+              className="rounded border border-slate-200 bg-white px-3 py-1 text-sm text-slate-700 disabled:opacity-40"
             >
               →
             </button>
@@ -123,7 +123,7 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
           </a>
         </div>
 
-        <div className="flex max-h-[600px] justify-center overflow-auto rounded border border-gray-200 bg-gray-200 p-2">
+        <div className="flex max-h-[600px] justify-center overflow-auto rounded border border-slate-200 bg-slate-200 p-2">
           {loadError ? (
             <p className="p-6 text-sm text-red-600">{loadError}</p>
           ) : (
@@ -133,7 +133,7 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
               onLoadError={() =>
                 setLoadError('Não foi possível carregar o PDF no visualizador.')
               }
-              loading={<p className="p-6 text-sm text-gray-600">Carregando PDF...</p>}
+              loading={<p className="p-6 text-sm text-slate-600">Carregando PDF...</p>}
             >
               <Page
                 pageNumber={page}
@@ -147,7 +147,7 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
       </div>
 
       <aside className="flex flex-col">
-        <h4 className="mb-2 text-sm font-semibold text-gray-800">
+        <h4 className="mb-2 text-sm font-semibold text-slate-800">
           Anotações da página {page}
         </h4>
 
@@ -159,14 +159,14 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
 
         <div className="mb-3 flex-1 space-y-2 overflow-y-auto">
           {pageAnnotations.length === 0 ? (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-slate-500">
               Nenhuma anotação nesta página.
             </p>
           ) : (
             pageAnnotations.map((annotation) => (
               <div
                 key={annotation.id}
-                className="rounded border border-gray-200 bg-white p-3"
+                className="rounded border border-slate-200 bg-white p-3"
               >
                 <div className="mb-1 flex items-center justify-between gap-2">
                   <span
@@ -176,16 +176,16 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
                   </span>
                   <button
                     onClick={() => handleRemove(annotation)}
-                    className="text-xs text-gray-400 hover:text-red-600"
+                    className="text-xs text-slate-400 hover:text-red-600"
                     title="Remover"
                   >
                     ✕
                   </button>
                 </div>
-                <p className="whitespace-pre-wrap text-sm text-gray-800">
+                <p className="whitespace-pre-wrap text-sm text-slate-800">
                   {annotation.content}
                 </p>
-                <p className="mt-1 text-xs text-gray-400">
+                <p className="mt-1 text-xs text-slate-400">
                   {annotation.author_name}
                 </p>
               </div>
@@ -193,11 +193,11 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
           )}
         </div>
 
-        <form onSubmit={handleAdd} className="space-y-2 border-t border-gray-200 pt-3">
+        <form onSubmit={handleAdd} className="space-y-2 border-t border-slate-200 pt-3">
           <select
             value={type}
             onChange={(e) => setType(e.target.value as AnnotationType)}
-            className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-primary-500"
+            className="w-full rounded border border-slate-200 px-2 py-1.5 text-sm outline-none focus:border-primary-500"
           >
             <option value="note">Nota</option>
             <option value="highlight">Destaque</option>
@@ -207,13 +207,13 @@ export default function PdfViewer({ projectId, documentId, versionId }: Props) {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             rows={2}
-            className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm outline-none focus:border-primary-500"
+            className="w-full rounded border border-slate-200 px-2 py-1.5 text-sm outline-none focus:border-primary-500"
             placeholder={`Anotar na página ${page}...`}
           />
           <button
             type="submit"
             disabled={saving || !content.trim()}
-            className="w-full rounded-lg bg-gray-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-gray-800 disabled:opacity-50"
+            className="w-full rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-slate-800 disabled:opacity-50"
           >
             {saving ? 'Salvando...' : 'Adicionar anotação'}
           </button>
