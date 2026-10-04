@@ -53,6 +53,8 @@ def project_id(client, owner_token):
 def mock_storage_and_tasks():
     with patch("app.api.v1.documents.upload_file") as upload_mock, patch(
         "app.api.v1.documents.generate_presigned_url", return_value="http://fake-url"
+    ), patch(
+        "app.api.v1.documents.download_file", return_value=b"%PDF-1.4 fake"
     ), patch("app.api.v1.documents.process_document_version.delay") as delay_mock:
         yield {"upload": upload_mock, "delay": delay_mock}
 
@@ -167,3 +169,38 @@ def test_download_url(client, owner_token, project_id, mock_storage_and_tasks):
     )
     assert response.status_code == 200
     assert response.json()["download_url"] == "http://fake-url"
+
+
+def test_list_includes_mime_type(client, owner_token, project_id, mock_storage_and_tasks):
+    upload_document(client, owner_token, project_id)
+    response = client.get(
+        f"/api/v1/projects/{project_id}/documents",
+        headers=auth_header(owner_token),
+    )
+    assert response.json()[0]["mime_type"] == "application/pdf"
+
+
+def test_stream_file_with_header(client, owner_token, project_id, mock_storage_and_tasks):
+    doc = upload_document(client, owner_token, project_id).json()
+    response = client.get(
+        f"/api/v1/projects/{project_id}/documents/{doc['id']}/versions/{doc['current_version_id']}/file",
+        headers=auth_header(owner_token),
+    )
+    assert response.status_code == 200
+    assert response.content == b"%PDF-1.4 fake"
+
+
+def test_stream_file_with_query_token(client, owner_token, project_id, mock_storage_and_tasks):
+    doc = upload_document(client, owner_token, project_id).json()
+    response = client.get(
+        f"/api/v1/projects/{project_id}/documents/{doc['id']}/versions/{doc['current_version_id']}/file?token={owner_token}",
+    )
+    assert response.status_code == 200
+
+
+def test_stream_file_requires_auth(client, project_id, mock_storage_and_tasks, owner_token):
+    doc = upload_document(client, owner_token, project_id).json()
+    response = client.get(
+        f"/api/v1/projects/{project_id}/documents/{doc['id']}/versions/{doc['current_version_id']}/file",
+    )
+    assert response.status_code == 401

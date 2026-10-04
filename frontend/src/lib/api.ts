@@ -25,6 +25,15 @@ export function isAuthenticated(): boolean {
   return !!getToken();
 }
 
+export function documentFileUrl(
+  projectId: string,
+  documentId: string,
+  versionId: string,
+): string {
+  const token = getToken();
+  return `${API_URL}/api/v1/projects/${projectId}/documents/${documentId}/versions/${versionId}/file?token=${token}`;
+}
+
 async function request<T>(
   path: string,
   options: RequestInit = {},
@@ -136,6 +145,7 @@ export interface Document {
   title: string;
   description: string | null;
   current_version_id: string | null;
+  mime_type: string | null;
   status: DocumentStatus;
   created_by: string;
   created_at: string;

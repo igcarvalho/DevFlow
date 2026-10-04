@@ -2,9 +2,14 @@ import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
-from app.core.deps import get_current_user, get_project_member
+from app.core.deps import (
+    get_current_user,
+    get_project_member,
+    get_project_member_flexible,
+)
 from app.db.session import get_db
 from app.models.document import Document, DocumentStatus, DocumentVersion
 from app.models.project import ProjectMember
@@ -15,7 +20,11 @@ from app.schemas.document import (
     DocumentUpdate,
     DocumentVersionRead,
 )
-from app.services.storage import generate_presigned_url, upload_file
+from app.services.storage import (
+    download_file,
+    generate_presigned_url,
+    upload_file,
+)
 from app.tasks.documents import process_document_version
 
 router = APIRouter(prefix="/projects/{project_id}/documents", tags=["documents"])
@@ -91,12 +100,30 @@ def list_documents(
     db: Annotated[Session, Depends(get_db)],
     member: Annotated[ProjectMember, Depends(get_project_member)],
 ):
-    return (
+    documents = (
         db.query(Document)
         .filter(Document.project_id == project_id, Document.deleted_at.is_(None))
         .order_by(Document.created_at.desc())
         .all()
     )
+
+    version_ids = [d.current_version_id for d in documents if d.current_version_id]
+    mime_map: dict[uuid.UUID, str] = {}
+    if version_ids:
+        versions = (
+            db.query(DocumentVersion)
+            .filter(DocumentVersion.id.in_(version_ids))
+            .all()
+        )
+        mime_map = {v.id: v.mime_type for v in versions}
+
+    result = []
+    for document in documents:
+        item = DocumentRead.model_validate(document)
+        if document.current_version_id:
+            item.mime_type = mime_map.get(document.current_version_id)
+        result.append(item)
+    return result
 
 
 @router.get("/{document_id}", response_model=DocumentReadWithVersions)
@@ -126,6 +153,12 @@ def get_document(
     )
     result = DocumentReadWithVersions.model_validate(document)
     result.versions = [DocumentVersionRead.model_validate(v) for v in versions]
+    if document.current_version_id:
+        current = next(
+            (v for v in versions if v.id == document.current_version_id), None
+        )
+        if current is not None:
+            result.mime_type = current.mime_type
     return result
 
 
@@ -153,6 +186,43 @@ def download_document_version(
 
     url = generate_presigned_url(version.file_key)
     return {"download_url": url}
+
+
+@router.get("/{document_id}/versions/{version_id}/file")
+def stream_document_version(
+    project_id: uuid.UUID,
+    document_id: uuid.UUID,
+    version_id: uuid.UUID,
+    db: Annotated[Session, Depends(get_db)],
+    member: Annotated[ProjectMember, Depends(get_project_member_flexible)],
+):
+    version = (
+        db.query(DocumentVersion)
+        .join(Document, Document.id == DocumentVersion.document_id)
+        .filter(
+            DocumentVersion.id == version_id,
+            DocumentVersion.document_id == document_id,
+            Document.project_id == project_id,
+            Document.deleted_at.is_(None),
+        )
+        .first()
+    )
+    if version is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Version not found")
+
+    try:
+        file_data = download_file(version.file_key)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="File not found in storage",
+        )
+
+    return StreamingResponse(
+        iter([file_data]),
+        media_type=version.mime_type,
+        headers={"Content-Disposition": "inline"},
+    )
 
 
 @router.post("/{document_id}/versions", response_model=DocumentVersionRead, status_code=status.HTTP_201_CREATED)

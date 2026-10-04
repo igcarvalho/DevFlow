@@ -29,6 +29,7 @@ class DocumentRead(BaseModel):
     title: str
     description: str | None = None
     current_version_id: uuid.UUID | None = None
+    mime_type: str | None = None
     status: DocumentStatus
     created_by: uuid.UUID
     created_at: datetime

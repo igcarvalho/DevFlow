@@ -15,6 +15,12 @@ import IssuesBoard from '@/components/IssuesBoard';
 import AiPanel from '@/components/AiPanel';
 import SearchPanel from '@/components/SearchPanel';
 import DocumentAnnotations from '@/components/DocumentAnnotations';
+import dynamic from 'next/dynamic';
+
+const PdfViewer = dynamic(() => import('@/components/PdfViewer'), {
+  ssr: false,
+  loading: () => <p className="mt-3 text-sm text-gray-500">Carregando visualizador...</p>,
+});
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: 'Aguardando', className: 'bg-yellow-100 text-yellow-800' },
@@ -299,11 +305,21 @@ export default function ProjectPage() {
                         </div>
                       </div>
                       {isExpanded && doc.current_version_id && (
-                        <DocumentAnnotations
-                          projectId={projectId}
-                          documentId={doc.id}
-                          versionId={doc.current_version_id}
-                        />
+                        <>
+                          {doc.mime_type === 'application/pdf' ? (
+                            <PdfViewer
+                              projectId={projectId}
+                              documentId={doc.id}
+                              versionId={doc.current_version_id}
+                            />
+                          ) : (
+                            <DocumentAnnotations
+                              projectId={projectId}
+                              documentId={doc.id}
+                              versionId={doc.current_version_id}
+                            />
+                          )}
+                        </>
                       )}
                     </li>
                   );
