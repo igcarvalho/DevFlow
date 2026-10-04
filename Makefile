@@ -1,4 +1,6 @@
-.PHONY: up down build logs shell-backend shell-frontend migrate test
+.PHONY: up down build logs shell-backend shell-frontend migrate makemigrations test prod-up prod-down prod-build prod-logs
+
+# --- Desenvolvimento ---
 
 up:
 	docker compose up -d
@@ -26,3 +28,17 @@ makemigrations:
 
 test:
 	docker compose exec backend pytest
+
+# --- Produção ---
+
+prod-up:
+	docker compose -f docker-compose.prod.yml up -d --build
+
+prod-down:
+	docker compose -f docker-compose.prod.yml down
+
+prod-build:
+	docker compose -f docker-compose.prod.yml build
+
+prod-logs:
+	docker compose -f docker-compose.prod.yml logs -f

@@ -109,14 +109,14 @@
 **Objetivo:** interface funcional e agradável.
 
 - [x] Setup do projeto Next.js
-- [ ] Layout base e navegação
-- [ ] Telas de login e registro
-- [ ] Dashboard de projetos
-- [ ] Tela de projeto (documentos, chat, tarefas)
-- [ ] Visualizador de PDF
-- [ ] Upload com progresso
-- [ ] Kanban de tarefas
-- [ ] Integração com API
+- [x] Layout base e navegação
+- [x] Telas de login e registro
+- [x] Dashboard de projetos
+- [x] Tela de projeto (documentos, chat, tarefas)
+- [x] Visualizador de PDF com anotações
+- [ ] Upload com barra de progresso
+- [x] Kanban de tarefas
+- [x] Integração com API
 
 ## Fase 11 — Polimento e deploy
 
@@ -126,8 +126,8 @@
 - [ ] Validações de formulários
 - [ ] Melhorias de UI/UX
 - [ ] Testes de integração
-- [ ] Configuração de deploy (Vercel + Render/Railway ou VPS)
-- [ ] README de deploy
+- [x] Configuração de deploy (Docker em VPS + alternativas em PaaS)
+- [x] README de deploy
 
 ## Ideias futuras
 

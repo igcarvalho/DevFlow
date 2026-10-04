@@ -111,6 +111,18 @@ make test            # Executa os testes do backend
 - [Arquitetura](./docs/architecture.md)
 - [Modelo de dados](./docs/data-model.md)
 - [Roadmap](./docs/roadmap.md)
+- [Deploy](./docs/deploy.md)
+
+## 🚢 Deploy
+
+Para colocar em produção:
+
+```bash
+cp .env.production.example .env   # edite as credenciais
+make prod-up                      # sobe tudo com Docker
+```
+
+Veja o [guia de deploy](./docs/deploy.md) para VPS e alternativas em PaaS (Vercel + Render).
 
 ## 🤝 Contribuição
 
