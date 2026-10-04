@@ -70,6 +70,10 @@ services:
       MINIO_USE_SSL: "false"
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
+      AI_PROVIDER: ${AI_PROVIDER:-groq}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_BASE_URL: ${AI_BASE_URL:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     volumes:
       - ./backend:/app
@@ -103,10 +107,27 @@ services:
       MINIO_USE_SSL: "false"
       CELERY_BROKER_URL: redis://redis:6379/0
       CELERY_RESULT_BACKEND: redis://redis:6379/0
+      AI_PROVIDER: ${AI_PROVIDER:-groq}
+      AI_API_KEY: ${AI_API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+      AI_BASE_URL: ${AI_BASE_URL:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     volumes:
       - ./backend:/app
     command: celery -A app.tasks.celery_app worker --loglevel=info
+
+  # IA local opcional (sem chave). Ative com:
+  #   docker compose --profile ollama up -d ollama
+  #   e defina AI_PROVIDER=ollama no .env
+  ollama:
+    image: ollama/ollama:latest
+    container_name: devflow-ollama
+    restart: unless-stopped
+    profiles: ["ollama"]
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
 
   frontend:
     build:
@@ -129,3 +150,4 @@ volumes:
   postgres_data:
   redis_data:
   minio_data:
+  ollama_data:

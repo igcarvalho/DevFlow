@@ -63,7 +63,7 @@ def document_id(client, owner_token, project_id):
 
 
 def test_ai_unavailable_without_key(client, owner_token, project_id, document_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", ""):
+    with patch("app.api.v1.ai.settings.AI_API_KEY", ""), patch("app.api.v1.ai.settings.AI_PROVIDER", "groq"):
         response = client.post(
             f"/api/v1/projects/{project_id}/ai/summarize",
             headers=auth_header(owner_token),
@@ -73,7 +73,7 @@ def test_ai_unavailable_without_key(client, owner_token, project_id, document_id
 
 
 def test_summarize_creates_job(client, owner_token, project_id, document_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ) as delay_mock:
         response = client.post(
@@ -89,7 +89,7 @@ def test_summarize_creates_job(client, owner_token, project_id, document_id):
 
 
 def test_ask_creates_job(client, owner_token, project_id, document_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ):
         response = client.post(
@@ -103,7 +103,7 @@ def test_ask_creates_job(client, owner_token, project_id, document_id):
 
 
 def test_suggest_tasks_creates_job(client, owner_token, project_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ):
         response = client.post(
@@ -115,7 +115,7 @@ def test_suggest_tasks_creates_job(client, owner_token, project_id):
 
 
 def test_list_and_get_jobs(client, owner_token, project_id, document_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ):
         job = client.post(
@@ -139,7 +139,7 @@ def test_list_and_get_jobs(client, owner_token, project_id, document_id):
 
 
 def test_outsider_cannot_use_ai(client, outsider_token, project_id, document_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ):
         response = client.post(
@@ -151,7 +151,7 @@ def test_outsider_cannot_use_ai(client, outsider_token, project_id, document_id)
 
 
 def test_summarize_unknown_document(client, owner_token, project_id):
-    with patch("app.api.v1.ai.settings.OPENAI_API_KEY", "sk-test"), patch(
+    with patch("app.api.v1.ai.settings.AI_API_KEY", "gsk-test"), patch(
         "app.api.v1.ai.process_ai_job.delay"
     ):
         response = client.post(

@@ -18,10 +18,13 @@ router = APIRouter(prefix="/projects/{project_id}/ai", tags=["ai"])
 
 
 def _ensure_configured() -> None:
-    if not settings.OPENAI_API_KEY:
+    if not settings.ai_configured:
         raise HTTPException(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Recurso de IA indisponível: OPENAI_API_KEY não configurada.",
+            detail=(
+                "Recurso de IA indisponível: defina AI_API_KEY "
+                "(ex.: chave gratuita do Groq em console.groq.com/keys)."
+            ),
         )
 
 

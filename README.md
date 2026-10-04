@@ -29,7 +29,7 @@ Centralizar o conhecimento técnico de projetos em um único lugar, eliminando a
 | Fila e cache | Redis |
 | Processamento async | Celery |
 | Armazenamento de arquivos | S3-compatible (moto em desenvolvimento) |
-| Inteligência artificial | OpenAI |
+| Inteligência artificial | Groq (gratuito) / OpenAI / Ollama / OpenRouter / Gemini |
 | Containerização | Docker Compose |
 
 ## 📊 Status do projeto
@@ -91,6 +91,42 @@ make up
 # API docs: http://localhost:8000/docs
 # PostgreSQL (externo): localhost:5433
 ```
+
+## 🤖 Configurando a IA (gratuita)
+
+O DevFlow usa por padrão o **Groq**, que é gratuito e compatível com a API da OpenAI.
+
+1. Crie uma chave em [console.groq.com/keys](https://console.groq.com/keys)
+2. No arquivo `.env`:
+
+```env
+AI_PROVIDER=groq
+AI_API_KEY=gsk_sua_chave_aqui
+```
+
+3. Reinicie os serviços: `make up`
+
+### Outros provedores
+
+Basta trocar as variáveis — nenhuma alteração de código é necessária:
+
+| Provedor | `AI_PROVIDER` | Chave |
+|----------|---------------|-------|
+| Groq (padrão) | `groq` | [console.groq.com/keys](https://console.groq.com/keys) |
+| OpenAI | `openai` | `OPENAI_API_KEY` |
+| Ollama (local, sem chave) | `ollama` | não precisa |
+| OpenRouter | `openrouter` | openrouter.ai |
+| Google Gemini | `gemini` | Google AI Studio |
+
+Para **Ollama local** (100% offline):
+
+```bash
+docker compose --profile ollama up -d ollama
+docker compose exec ollama ollama pull llama3.2
+# no .env: AI_PROVIDER=ollama
+```
+
+Também é possível definir `AI_MODEL` e `AI_BASE_URL` para sobrescrever os padrões.
 
 ## 🛠️ Comandos úteis
 

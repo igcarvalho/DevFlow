@@ -6,17 +6,58 @@ from app.core.config import settings
 
 MAX_CONTEXT_CHARS = 12000
 
+# Provedores compatíveis com a API da OpenAI: base_url padrão e modelo padrão.
+PROVIDER_DEFAULTS: dict[str, dict[str, str]] = {
+    "openai": {
+        "base_url": "https://api.openai.com/v1",
+        "model": "gpt-4o-mini",
+    },
+    "groq": {
+        "base_url": "https://api.groq.com/openai/v1",
+        "model": "llama-3.3-70b-versatile",
+    },
+    "ollama": {
+        "base_url": "http://ollama:11434/v1",
+        "model": "llama3.2",
+    },
+    "openrouter": {
+        "base_url": "https://openrouter.ai/api/v1",
+        "model": "meta-llama/llama-3.3-70b-instruct:free",
+    },
+    "gemini": {
+        "base_url": "https://generativelanguage.googleapis.com/v1beta/openai/",
+        "model": "gemini-1.5-flash",
+    },
+}
+
 
 class AiNotConfiguredError(Exception):
-    """Raised when the OpenAI API key is not configured."""
+    """Raised when the AI provider is not configured."""
+
+
+def _resolve_base_url() -> str:
+    if settings.AI_BASE_URL:
+        return settings.AI_BASE_URL
+    defaults = PROVIDER_DEFAULTS.get(settings.AI_PROVIDER.lower())
+    return defaults["base_url"] if defaults else ""
+
+
+def _resolve_model() -> str:
+    if settings.AI_MODEL:
+        return settings.AI_MODEL
+    defaults = PROVIDER_DEFAULTS.get(settings.AI_PROVIDER.lower())
+    return defaults["model"] if defaults else ""
 
 
 def _client() -> OpenAI:
-    if not settings.OPENAI_API_KEY:
+    if not settings.ai_configured:
         raise AiNotConfiguredError(
-            "OPENAI_API_KEY não configurada. Defina a variável para usar os recursos de IA."
+            "Recurso de IA não configurado. Defina AI_API_KEY (ex.: chave do Groq) "
+            "para usar resumos, perguntas e sugestões de tarefas."
         )
-    return OpenAI(api_key=settings.OPENAI_API_KEY)
+    # Ollama não exige chave; o SDK exige um valor não vazio.
+    api_key = settings.ai_api_key or "ollama"
+    return OpenAI(api_key=api_key, base_url=_resolve_base_url())
 
 
 def _truncate(text: str) -> str:
@@ -34,7 +75,7 @@ def summarize_document(title: str, text: str) -> str:
         f"Conteúdo:\n{_truncate(text)}"
     )
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=_resolve_model(),
         messages=[
             {"role": "system", "content": "Você resume documentos técnicos de forma clara e objetiva."},
             {"role": "user", "content": prompt},
@@ -54,7 +95,7 @@ def answer_question(title: str, text: str, question: str) -> str:
         "Se a resposta não estiver no documento, diga que não encontrou a informação."
     )
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=_resolve_model(),
         messages=[
             {"role": "system", "content": "Você responde perguntas com base apenas no documento fornecido."},
             {"role": "user", "content": prompt},
@@ -74,7 +115,7 @@ def suggest_tasks(context: str) -> list[dict]:
         f"Conversa:\n{_truncate(context)}"
     )
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model=_resolve_model(),
         messages=[
             {"role": "system", "content": "Você transforma discussões técnicas em tarefas acionáveis."},
             {"role": "user", "content": prompt},

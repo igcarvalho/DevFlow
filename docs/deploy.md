@@ -93,13 +93,49 @@ Alternativa gerenciada, sem administrar servidor.
 
 ---
 
+## Provedores de IA
+
+O provedor é definido por variável de ambiente — não requer alteração de código.
+
+```env
+AI_PROVIDER=groq
+AI_API_KEY=gsk_...
+```
+
+| Provedor | Custo | Chave | Observações |
+|----------|-------|-------|-------------|
+| `groq` | Gratuito | [console.groq.com/keys](https://console.groq.com/keys) | Padrão. Rápido, Llama 3.3 70B |
+| `openai` | Pago | platform.openai.com | Usa `AI_API_KEY` ou `OPENAI_API_KEY` |
+| `ollama` | Gratuito | Não precisa | Roda local; requer serviço `ollama` |
+| `openrouter` | Modelos `:free` | openrouter.ai | Vários modelos gratuitos |
+| `gemini` | Tier gratuito | Google AI Studio | Gemini Flash |
+
+> Se a IA não estiver configurada, o restante da aplicação funciona normalmente —
+> apenas as funcionalidades de IA exibem uma mensagem de indisponibilidade.
+
+### Ollama em produção
+
+Adicione ao `docker-compose.prod.yml` um serviço `ollama` e defina:
+
+```env
+AI_PROVIDER=ollama
+AI_BASE_URL=http://ollama:11434/v1
+AI_MODEL=llama3.2
+```
+
+Após subir, baixe o modelo:
+
+```bash
+docker compose -f docker-compose.prod.yml exec ollama ollama pull llama3.2
+```
+
 ## Checklist de segurança
 
 - [ ] `SECRET_KEY` forte e única (nunca use o valor padrão)
 - [ ] `DEBUG=false` em produção
 - [ ] Senha do PostgreSQL forte
 - [ ] HTTPS habilitado (proxy reverso ou provedor)
-- [ ] `OPENAI_API_KEY` configurada (ou IA fica indisponível, mas o app funciona)
+- [ ] `AI_API_KEY` configurada (ou IA fica indisponível, mas o app funciona normalmente)
 - [ ] Backups periódicos do PostgreSQL
 - [ ] CORS restrito ao domínio do frontend
 
@@ -123,7 +159,10 @@ allow_origins=[
 | `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` | Credenciais do banco | Sim |
 | `MINIO_ACCESS_KEY` / `MINIO_SECRET_KEY` | Credenciais do storage S3 | Sim |
 | `MINIO_BUCKET_NAME` | Nome do bucket | Sim |
-| `OPENAI_API_KEY` | Chave da OpenAI (recursos de IA) | Não |
+| `AI_PROVIDER` | Provedor de IA (`groq`, `openai`, `ollama`, `openrouter`, `gemini`) | Não |
+| `AI_API_KEY` | Chave do provedor de IA (ex.: Groq) | Não |
+| `AI_MODEL` / `AI_BASE_URL` | Sobrescrevem os padrões do provedor | Não |
+| `OPENAI_API_KEY` | Chave da OpenAI (legado, usado se `AI_PROVIDER=openai`) | Não |
 | `NEXT_PUBLIC_API_URL` | URL pública da API | Sim |
 | `ACCESS_TOKEN_EXPIRE_MINUTES` | Expiração do token em minutos | Não |
 

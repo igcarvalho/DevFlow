@@ -126,6 +126,25 @@ export default function AiPanel({ projectId }: { projectId: string }) {
           partir da conversa do projeto.
         </p>
 
+        {error && error.toLowerCase().includes('indisponível') && (
+          <div className="mb-4 rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+            <p className="font-medium">Como ativar a IA</p>
+            <p className="mt-1">
+              Configure uma chave gratuita do Groq em{' '}
+              <a
+                href="https://console.groq.com/keys"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                console.groq.com/keys
+              </a>{' '}
+              e defina <code className="rounded bg-blue-100 px-1">AI_API_KEY</code>{' '}
+              no arquivo <code className="rounded bg-blue-100 px-1">.env</code>.
+            </p>
+          </div>
+        )}
+
         {error && (
           <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">
             {error}
