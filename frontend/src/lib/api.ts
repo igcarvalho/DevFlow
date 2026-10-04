@@ -146,6 +146,33 @@ export interface DocumentWithVersions extends Document {
   versions: DocumentVersion[];
 }
 
+export type IssueStatus =
+  | 'backlog'
+  | 'todo'
+  | 'in_progress'
+  | 'done'
+  | 'cancelled';
+
+export type IssuePriority = 'low' | 'medium' | 'high' | 'urgent';
+
+export interface Issue {
+  id: string;
+  project_id: string;
+  title: string;
+  description: string | null;
+  status: IssueStatus;
+  priority: IssuePriority;
+  assignee_id: string | null;
+  due_date: string | null;
+  document_id: string | null;
+  message_id: string | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  closed_at: string | null;
+  assignee_name: string | null;
+}
+
 export interface Chat {
   id: string;
   project_id: string;
@@ -251,4 +278,17 @@ export const chatApi = {
       content,
       reply_to_id: replyToId ?? null,
     }),
+};
+
+export const issuesApi = {
+  list: (projectId: string) =>
+    api.get<Issue[]>(`/api/v1/projects/${projectId}/issues`),
+  create: (
+    projectId: string,
+    data: { title: string; description?: string; priority?: IssuePriority },
+  ) => api.post<Issue>(`/api/v1/projects/${projectId}/issues`, data),
+  update: (projectId: string, issueId: string, data: Partial<Issue>) =>
+    api.patch<Issue>(`/api/v1/projects/${projectId}/issues/${issueId}`, data),
+  remove: (projectId: string, issueId: string) =>
+    api.delete<void>(`/api/v1/projects/${projectId}/issues/${issueId}`),
 };

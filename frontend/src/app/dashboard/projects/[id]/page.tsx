@@ -11,6 +11,7 @@ import {
 } from '@/lib/api';
 import { useAuth } from '@/lib/auth';
 import ChatPanel from '@/components/ChatPanel';
+import IssuesBoard from '@/components/IssuesBoard';
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: 'Aguardando', className: 'bg-yellow-100 text-yellow-800' },
@@ -36,7 +37,9 @@ export default function ProjectPage() {
 
   const [memberEmail, setMemberEmail] = useState('');
   const [memberMessage, setMemberMessage] = useState('');
-  const [activeTab, setActiveTab] = useState<'documents' | 'chat'>('documents');
+  const [activeTab, setActiveTab] = useState<'documents' | 'chat' | 'issues'>(
+    'documents',
+  );
 
   useEffect(() => {
     if (!authLoading && !authenticated) {
@@ -159,10 +162,22 @@ export default function ProjectPage() {
               >
                 Chat
               </button>
+              <button
+                onClick={() => setActiveTab('issues')}
+                className={`flex-1 rounded-md px-4 py-2 text-sm font-medium transition ${
+                  activeTab === 'issues'
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Tarefas
+              </button>
             </div>
 
             {activeTab === 'chat' ? (
               <ChatPanel projectId={projectId} />
+            ) : activeTab === 'issues' ? (
+              <IssuesBoard projectId={projectId} />
             ) : (
             <>
             <div className="mb-4 flex items-center justify-between">
