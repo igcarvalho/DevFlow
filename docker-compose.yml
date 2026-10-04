@@ -34,18 +34,13 @@ services:
       retries: 5
 
   minio:
-    image: zenko/cloudserver:latest
+    image: motoserver/moto:latest
     container_name: devflow-minio
     restart: unless-stopped
-    environment:
-      SCALITY_ACCESS_KEY_ID: minioadmin
-      SCALITY_SECRET_ACCESS_KEY: minioadmin
-    volumes:
-      - minio_data:/data
     ports:
-      - "9000:8000"
+      - "9000:5000"
     healthcheck:
-      test: ["CMD", "sh", "-c", "curl -s -o /dev/null -w '%{http_code}' http://localhost:8000/ | grep -E '200|403'"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -70,7 +65,7 @@ services:
       ACCESS_TOKEN_EXPIRE_MINUTES: "60"
       DATABASE_URL: postgresql+psycopg2://devflow:devflow@postgres:5432/devflow
       REDIS_URL: redis://redis:6379/0
-      MINIO_ENDPOINT: minio:9000
+      MINIO_ENDPOINT: minio:5000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET_NAME: devflow-uploads
@@ -103,7 +98,7 @@ services:
       SECRET_KEY: change-me-in-production
       DATABASE_URL: postgresql+psycopg2://devflow:devflow@postgres:5432/devflow
       REDIS_URL: redis://redis:6379/0
-      MINIO_ENDPOINT: minio:9000
+      MINIO_ENDPOINT: minio:5000
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
       MINIO_BUCKET_NAME: devflow-uploads
@@ -113,7 +108,7 @@ services:
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     volumes:
       - ./backend:/app
-    command: celery -A app.tasks worker --loglevel=info
+    command: celery -A app.tasks.celery_app worker --loglevel=info
 
   frontend:
     build:
