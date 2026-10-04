@@ -14,6 +14,7 @@ import ChatPanel from '@/components/ChatPanel';
 import IssuesBoard from '@/components/IssuesBoard';
 import AiPanel from '@/components/AiPanel';
 import SearchPanel from '@/components/SearchPanel';
+import DocumentAnnotations from '@/components/DocumentAnnotations';
 
 const STATUS_LABELS: Record<string, { label: string; className: string }> = {
   pending: { label: 'Aguardando', className: 'bg-yellow-100 text-yellow-800' },
@@ -42,6 +43,7 @@ export default function ProjectPage() {
   const [activeTab, setActiveTab] = useState<
     'documents' | 'chat' | 'issues' | 'ai' | 'search'
   >('documents');
+  const [expandedDoc, setExpandedDoc] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !authenticated) {
@@ -265,24 +267,44 @@ export default function ProjectPage() {
               <ul className="space-y-3">
                 {documents.map((doc) => {
                   const status = STATUS_LABELS[doc.status] || STATUS_LABELS.pending;
+                  const isExpanded = expandedDoc === doc.id;
                   return (
                     <li
                       key={doc.id}
-                      className="flex items-center justify-between rounded-xl border border-gray-200 bg-white p-4"
+                      className="rounded-xl border border-gray-200 bg-white p-4"
                     >
-                      <div className="min-w-0">
-                        <p className="truncate font-medium text-gray-900">
-                          {doc.title}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(doc.created_at).toLocaleString('pt-BR')}
-                        </p>
+                      <div className="flex items-center justify-between">
+                        <div className="min-w-0">
+                          <p className="truncate font-medium text-gray-900">
+                            {doc.title}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {new Date(doc.created_at).toLocaleString('pt-BR')}
+                          </p>
+                        </div>
+                        <div className="ml-3 flex shrink-0 items-center gap-2">
+                          <span
+                            className={`rounded-full px-3 py-1 text-xs font-medium ${status.className}`}
+                          >
+                            {status.label}
+                          </span>
+                          <button
+                            onClick={() =>
+                              setExpandedDoc(isExpanded ? null : doc.id)
+                            }
+                            className="rounded-lg border border-gray-300 px-3 py-1 text-xs font-medium text-gray-600 transition hover:bg-gray-50"
+                          >
+                            {isExpanded ? 'Fechar' : 'Anotações'}
+                          </button>
+                        </div>
                       </div>
-                      <span
-                        className={`ml-3 shrink-0 rounded-full px-3 py-1 text-xs font-medium ${status.className}`}
-                      >
-                        {status.label}
-                      </span>
+                      {isExpanded && doc.current_version_id && (
+                        <DocumentAnnotations
+                          projectId={projectId}
+                          documentId={doc.id}
+                          versionId={doc.current_version_id}
+                        />
+                      )}
                     </li>
                   );
                 })}

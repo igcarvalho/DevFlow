@@ -296,6 +296,59 @@ export const chatApi = {
     }),
 };
 
+export type AnnotationType = 'note' | 'highlight' | 'comment';
+
+export interface Annotation {
+  id: string;
+  document_id: string;
+  version_id: string;
+  page_number: number;
+  type: AnnotationType;
+  content: string;
+  position: Record<string, unknown> | null;
+  created_by: string;
+  created_at: string;
+  updated_at: string;
+  author_name: string | null;
+}
+
+export const annotationsApi = {
+  list: (projectId: string, documentId: string, pageNumber?: number) =>
+    api.get<Annotation[]>(
+      `/api/v1/projects/${projectId}/documents/${documentId}/annotations${
+        pageNumber ? `?page_number=${pageNumber}` : ''
+      }`,
+    ),
+  create: (
+    projectId: string,
+    documentId: string,
+    data: {
+      version_id: string;
+      page_number: number;
+      type: AnnotationType;
+      content: string;
+    },
+  ) =>
+    api.post<Annotation>(
+      `/api/v1/projects/${projectId}/documents/${documentId}/annotations`,
+      data,
+    ),
+  update: (
+    projectId: string,
+    documentId: string,
+    annotationId: string,
+    data: { content?: string; type?: AnnotationType; page_number?: number },
+  ) =>
+    api.patch<Annotation>(
+      `/api/v1/projects/${projectId}/documents/${documentId}/annotations/${annotationId}`,
+      data,
+    ),
+  remove: (projectId: string, documentId: string, annotationId: string) =>
+    api.delete<void>(
+      `/api/v1/projects/${projectId}/documents/${documentId}/annotations/${annotationId}`,
+    ),
+};
+
 export interface DocumentSearchResult {
   id: string;
   title: string;

@@ -1,13 +1,11 @@
 import enum
 
-from sqlalchemy import JSON, Column, DateTime, Enum, ForeignKey, Text
-from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
-
-# JSONB no PostgreSQL, JSON genérico em outros bancos (ex.: SQLite nos testes)
-JsonType = JSON().with_variant(JSONB, "postgresql")
+from app.db.types import JsonType
 
 
 class AiJobType(str, enum.Enum):
